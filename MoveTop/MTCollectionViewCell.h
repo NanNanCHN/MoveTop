@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol CollectionViewCellDelegate <NSObject>
+@protocol MTCollectionViewCellDelegate <NSObject>
 
 - (void)updateSortArrWithNum:(NSInteger)num;
 
 @end
 
-@interface CollectionViewCell : UICollectionViewCell
+@interface MTCollectionViewCell : UICollectionViewCell
 
-@property (assign, nonatomic) id<CollectionViewCellDelegate>delegate;
+@property (assign, nonatomic) id<MTCollectionViewCellDelegate>delegate;
 @property (assign, nonatomic) NSInteger itemNum; /// 当前第几个
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *button;

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CollectionViewController : UICollectionViewController<UICollectionViewDelegateFlowLayout>
+@interface MTCollectionViewController : UICollectionViewController<UICollectionViewDelegateFlowLayout>
 
 @end

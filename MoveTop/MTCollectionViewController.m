@@ -6,15 +6,15 @@
 //  Copyright © 2016年 Nico. All rights reserved.
 //
 
-#import "CollectionViewController.h"
-#import "CollectionViewCell.h"
+#import "MTCollectionViewController.h"
+#import "MTCollectionViewCell.h"
 
 #define KEY @"ORDER_KEY"
-@interface CollectionViewController ()<CollectionViewCellDelegate>
+@interface MTCollectionViewController ()<MTCollectionViewCellDelegate>
 @property (strong, nonatomic) NSMutableArray *orderArr;
 @end
 
-@implementation CollectionViewController
+@implementation MTCollectionViewController
 
 static NSString * const reuseIdentifier = @"Cell";
 
@@ -61,7 +61,7 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+    MTCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.delegate = self;
     cell.infoLabel.text = [self.orderArr objectAtIndex:indexPath.item];
     cell.itemNum = indexPath.item;
@@ -81,7 +81,7 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 #pragma mark --
-#pragma mark CollectionViewCellDelegate
+#pragma mark MTCollectionViewCellDelegate
 - (void)updateSortArrWithNum:(NSInteger)num
 {
     NSString *nameStr = [self.orderArr objectAtIndex:num];
@@ -90,7 +90,7 @@ static NSString * const reuseIdentifier = @"Cell";
     
     [self setDeFaultsWithOrderArr:self.orderArr];
     
-    __weak CollectionViewController *wself = self;
+    __weak MTCollectionViewController *wself = self;
     [self.collectionView performBatchUpdates:^{
         [wself.collectionView moveItemAtIndexPath:[NSIndexPath indexPathForItem:num inSection:0] toIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 

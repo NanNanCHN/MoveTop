@@ -6,9 +6,9 @@
 //  Copyright © 2016年 Nico. All rights reserved.
 //
 
-#import "CollectionViewCell.h"
-#import "CollectionViewController.h"
-@implementation CollectionViewCell
+#import "MTCollectionViewCell.h"
+
+@implementation MTCollectionViewCell
 
 - (IBAction)onButtonPress:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(updateSortArrWithNum:)]) {
