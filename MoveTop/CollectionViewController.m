@@ -8,8 +8,10 @@
 
 #import "CollectionViewController.h"
 #import "CollectionViewCell.h"
+
+#define KEY @"ORDER_KEY"
 @interface CollectionViewController ()<CollectionViewCellDelegate>
-@property (strong, nonatomic) NSMutableArray *sourceArr;
+@property (strong, nonatomic) NSMutableArray *orderArr;
 @end
 
 @implementation CollectionViewController
@@ -18,7 +20,17 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.sourceArr = [[NSMutableArray alloc] initWithObjects:@"天气",@"股票",@"论坛", nil];
+    
+    /**
+     * 将顺序数组赋值
+     * 本地有数据从本地取
+     * 无数据创建
+     */
+    if ([self getOrderArrWithKey:KEY].count == 0) {
+        self.orderArr = [[NSMutableArray alloc] initWithObjects:@"天气",@"股票",@"论坛", nil];
+    } else {
+        self.orderArr = [self getOrderArrWithKey:KEY];
+    }
     // Do any additional setup after loading the view.
 }
 
@@ -45,13 +57,13 @@ static NSString * const reuseIdentifier = @"Cell";
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.sourceArr.count;
+    return self.orderArr.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     CollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.delegate = self;
-    cell.infoLabel.text = [self.sourceArr objectAtIndex:indexPath.item];
+    cell.infoLabel.text = [self.orderArr objectAtIndex:indexPath.item];
     cell.itemNum = indexPath.item;
     if (indexPath.item == 0) {
         cell.button.hidden = YES;
@@ -72,9 +84,11 @@ static NSString * const reuseIdentifier = @"Cell";
 #pragma mark CollectionViewCellDelegate
 - (void)updateSortArrWithNum:(NSInteger)num
 {
-    NSString *nameStr = [self.sourceArr objectAtIndex:num];
-    [self.sourceArr removeObjectAtIndex:num];
-    [self.sourceArr insertObject:nameStr atIndex:0];
+    NSString *nameStr = [self.orderArr objectAtIndex:num];
+    [self.orderArr removeObjectAtIndex:num];
+    [self.orderArr insertObject:nameStr atIndex:0];
+    
+    [self setDeFaultsWithOrderArr:self.orderArr];
     
     __weak CollectionViewController *wself = self;
     [self.collectionView performBatchUpdates:^{
@@ -86,4 +100,33 @@ static NSString * const reuseIdentifier = @"Cell";
         }
     }];
 }
+
+#pragma mark --
+#pragma mark 顺序数组存到本地
+- (void)setDeFaultsWithOrderArr:(NSMutableArray *)orderArr
+{
+    NSError *error;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:self.orderArr options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *order = [[NSString  alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    [def setValue:order forKey:KEY];
+    [def synchronize];
+}
+
+#pragma mark -- 
+#pragma mark 从本地取出顺序数组
+- (NSMutableArray *)getOrderArrWithKey:(NSString *)key
+{
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    NSString *str = [def stringForKey:key];
+    if (str == nil) {
+        return nil;
+    } else {
+        NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error;
+        NSArray *arr = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        return [NSMutableArray arrayWithArray:arr];
+    }
+}
+
 @end
