@@ -17,7 +17,7 @@
 @interface MTCollectionViewCell : UICollectionViewCell
 
 @property (assign, nonatomic) id<MTCollectionViewCellDelegate>delegate;
-@property (assign, nonatomic) NSInteger itemNum; /// 当前第几个
+@property (assign, nonatomic) NSInteger itemNum; /// 当前第几个cell
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *button;
 - (IBAction)onButtonPress:(id)sender;
