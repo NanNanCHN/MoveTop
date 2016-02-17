@@ -10,6 +10,9 @@
 #import "MTCollectionViewCell.h"
 
 #define KEY @"ORDER_KEY"
+#define WIDTH [UIScreen mainScreen].bounds.size.width
+#define HEIGHT 200
+
 @interface MTCollectionViewController ()<MTCollectionViewCellDelegate>
 @property (strong, nonatomic) NSMutableArray *orderArr;
 @end
@@ -61,7 +64,7 @@ static NSString * const reuseIdentifier = @"Cell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+    //cell内赋值数据较少,如果多,则把赋值方法写入cell内
     MTCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     cell.delegate = self;
     cell.infoLabel.text = [self.orderArr objectAtIndex:indexPath.item];
@@ -71,14 +74,13 @@ static NSString * const reuseIdentifier = @"Cell";
     } else {
         cell.button.hidden = NO;
     }
-    // Configure the cell
     
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake([UIScreen mainScreen].bounds.size.width, 200);
+    return CGSizeMake(WIDTH ,HEIGHT);
 }
 
 #pragma mark --
@@ -92,6 +94,8 @@ static NSString * const reuseIdentifier = @"Cell";
     [self setDeFaultsWithOrderArr:self.orderArr];
     
     __weak MTCollectionViewController *wself = self;
+    
+    //采用collectionView的移动cell方法
     [self.collectionView performBatchUpdates:^{
         [wself.collectionView moveItemAtIndexPath:[NSIndexPath indexPathForItem:num inSection:0] toIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 
